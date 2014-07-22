@@ -196,7 +196,9 @@ App.module("Tree.Views", function (Views, App, Backbone, Marionette, $, _) {
             if (closing) { return; }
             $el.removeClass("fa-caret-right").addClass("fa-caret-down");
             $html.insertAfter($el.parents(".tree-container-header").first());
-
+            $html.find("a.move").click(function (evt) {
+                evt.preventDefault();
+            });
             $html.find("a.text-danger").click(function (evt) {
                 evt.preventDefault();
                 GecosUtils.askConfirmation({

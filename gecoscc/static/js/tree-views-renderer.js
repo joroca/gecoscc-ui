@@ -67,6 +67,9 @@ App.module("Tree.Views", function (Views, App, Backbone, Marionette, $, _) {
             '        <li><a href="#" class="text-danger">\n' +
             '            <span class="fa fa-times"></span> ' + gettext('Delete') + '\n' +
             '        </a></li>\n' +
+            '        <li><a href="#" class="move">\n' +
+            '            <span class="glyphicon glyphicon-move"></span> ' + gettext('Move') + '\n' +
+            '        </a></li>\n' +
             '    </ul>\n' +
             '</div>\n';
 
