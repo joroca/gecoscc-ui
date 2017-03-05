@@ -25,9 +25,12 @@
     <button class="btn btn-xs btn-default pull-right archiveTasks" title="{{ gettext('Archive Tasks') }}">
         <span class="fa fa-archive"></span>
     </button>
+    <button id="backstack" class="btn btn-xs btn-default pull-right backstack" title="{{ gettext('Backstrack') }}">
+        <span class="fa fa-reply"></span>
+    </button>
 </div>
 <div class="bootstrap-admin-panel-content table-responsive">
-    <table class="table table-striped table-bordered">
+    <table id="macrojobs" class="table table-striped table-bordered">
         <thead class="long <% if (!isMaximized) { print('hide'); } %>">
             <tr>
                 <th>
@@ -38,6 +41,9 @@
                 </th>
                 <th>
                     {{ gettext("Policy") }}
+                </th>
+                <th>
+                    {{ gettext("Macrojob") }}
                 </th>
                 <th>
                     {{ gettext("Trace") }}
@@ -58,6 +64,13 @@
                 </td>
                 <td>
                     <%= item['policyname_' + App.language] || item.policyname %>
+                </td>
+                <td>
+                    <% if (item.parent==='None' && item.nchilds > 0) { %>
+                    <a href="#" id="tasksChilds" class="<% if (parentId) { print('active'); } %>"><%= item._id %></a>
+                    <% } else { %>
+                    <%= item._id %>
+                    <% } %>
                 </td>
                 <td style="max-width: <%= screen.width / 2 %>px">
                     <span class="fa <% if (item.status==='finished') { %> fa-check<% }
@@ -101,6 +114,25 @@
         </ul>
     <% } %>
 </div>
-
-
-
+{% block extrajs %}
+    <script type="text/javascript">
+        (function($){
+            $(document).ready(function () {
+              $("#macrojobs").DataTable({
+                  "bPaginate": true,
+                  "bLengthChange": false,
+                  "bSort": false,
+                  "bInfo": false,
+                  "oLanguage": {
+                    "sSearch": "{{ gettext('Search') }}",
+                    "oPaginate": {
+                        "sNext": "{{ gettext('Next') }}",
+                        "sPrevious": "{{ gettext('Previous') }}"
+                    }
+                  }
+              })
+            });
+            $('ul.pagination').addClass('hide');                                                
+        })(jQuery);
+    </script>
+{% endblock %}

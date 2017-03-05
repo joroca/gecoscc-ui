@@ -46,6 +46,7 @@ var App;
         events: {
             "click #maximize": "maximize",
             "click #minimize": "minimize",
+            "click #tasksChilds": "tasksChilds",
             "click button.refresh": "refresh",
             "click ul.pagination a": "goToPage",
             "click span.filters #tasksAll": "tasksAll",
@@ -55,9 +56,16 @@ var App;
             "click span.filters #tasksWarnings": "tasksWarnings",
             "click span.filters #tasksActives": "tasksActives",
             "click span.filters #tasksArchived": "tasksArchived",
-            "click button.archiveTasks": "archiveTasks"
+            "click button.archiveTasks": "archiveTasks",
+            "click button.backstack": "backstack"
         },
 
+        backstack: function () {
+            this.collection.status = '';
+            this.collection.archived = false;
+            this.collection.parentId = '';
+            this.tasksFilter();
+        },
         refresh: function () {
             App.instances.job_collection.fetch();
             App.instances.job_statistics.fetch();
@@ -101,6 +109,13 @@ var App;
             this.collection.archived = true;
             this.tasksFilter();
         },
+        tasksChilds: function (evt) {
+            var events = this.$el;
+            evt.preventDefault();
+            //this.collection.parentId = events.find("#tasksChilds")[0].innerHTML;
+            this.collection.parentId = evt.currentTarget.innerHTML;
+            this.tasksFilter();
+        },
         archiveTasks: function (evt) {
             var that = this;
             evt.preventDefault();
@@ -139,6 +154,7 @@ var App;
             this.isMaximized = false;
             this.collection.status = '';
             this.collection.archived = false;
+            this.collection.parentId = '';
             this.tasksFilter();
         },
         serializeData: function () {
@@ -165,9 +181,11 @@ var App;
                 "prev": current !== 1,
                 "next": current !== total,
                 "pages": paginator,
-                "showPaginator": paginator.length > 1,
+                //"showPaginator": paginator.length > 1,
+                "showPaginator": false,
                 "isMaximized": this.isMaximized,
                 "status": this.collection.status,
+                "parentId":this.collection.parentId,
                 "archived": this.collection.archived
             };
         },
