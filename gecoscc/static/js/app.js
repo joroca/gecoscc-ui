@@ -77,42 +77,47 @@ var App;
         tasksAll: function (evt) {
             evt.preventDefault();
             this.collection.status = '';
+            this.collection.archived = false;
             this.tasksFilter();
         },
         tasksProcessing: function (evt) {
             evt.preventDefault();
             this.collection.status = 'processing';
+            this.collection.archived = false;
             this.tasksFilter();
         },
         tasksFinished: function (evt) {
             evt.preventDefault();
             this.collection.status = 'finished';
+            this.collection.archived = false;
             this.tasksFilter();
         },
         tasksErrors: function (evt) {
             evt.preventDefault();
             this.collection.status = 'errors';
+            this.collection.archived = false;
             this.tasksFilter();
         },
         tasksWarnings: function (evt) {
             evt.preventDefault();
             this.collection.status = 'warnings';
+            this.collection.archived = false;
             this.tasksFilter();
         },
         tasksActives: function (evt) {
             evt.preventDefault();
+            this.collection.status = '';
             this.collection.archived = false;
             this.tasksFilter();
         },
         tasksArchived: function (evt) {
             evt.preventDefault();
+            this.collection.status = '';
             this.collection.archived = true;
             this.tasksFilter();
         },
         tasksChilds: function (evt) {
-            var events = this.$el;
             evt.preventDefault();
-            //this.collection.parentId = events.find("#tasksChilds")[0].innerHTML;
             this.collection.parentId = evt.currentTarget.innerHTML;
             this.tasksFilter();
         },
@@ -139,6 +144,7 @@ var App;
             events.find(".long").removeClass("hide");
             events.addClass("maximize");
             this.isMaximized = true;
+            this.render();
         },
         minimize: function (evt) {
             var events = this.$el;
@@ -156,6 +162,7 @@ var App;
             this.collection.archived = false;
             this.collection.parentId = '';
             this.tasksFilter();
+            this.render();
         },
         serializeData: function () {
             var paginator = [],
@@ -181,12 +188,12 @@ var App;
                 "prev": current !== 1,
                 "next": current !== total,
                 "pages": paginator,
-                //"showPaginator": paginator.length > 1,
-                "showPaginator": false,
+                "showPaginator": paginator.length > 1,
                 "isMaximized": this.isMaximized,
                 "status": this.collection.status,
                 "parentId":this.collection.parentId,
-                "archived": this.collection.archived
+                "archived": this.collection.archived,
+                "total": this.collection.total,
             };
         },
         goToPage: function (evt) {

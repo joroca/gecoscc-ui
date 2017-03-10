@@ -169,6 +169,7 @@ class ResourcePaginatedReadOnly(BaseAPI):
             'pages': pages,
             'page': page,
             self.collection_name: parsed_objects,
+            'total': nodes_count,
         }
 
     def get(self):

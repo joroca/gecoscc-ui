@@ -26,7 +26,7 @@ from celery.exceptions import Ignore
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
-
+import gettext
 from gecoscc.eventsmanager import JobStorage
 from gecoscc.rules import get_rules, is_user_policy, get_username_chef_format, object_related_list
 from gecoscc.socks import invalidate_jobs
@@ -54,7 +54,10 @@ class ChefTask(Task):
     def __init__(self):
         self.init_jobid()
         self.logger = self.get_logger()
-
+        gettext.bindtextdomain('gecoscc', '/opt/gecosccui-2.1.10/lib/python2.6/site-packages/gecoscc/locale/')
+        gettext.textdomain('gecoscc')
+        self._ = gettext.gettext
+        
     @property
     def db(self):
         if hasattr(self, '_db'):
@@ -871,12 +874,13 @@ class ChefTask(Task):
         # MacroJob
         job_ids_by_order = []
         name = "%s %s" % (obj['type'], action)
+        name_es = self._(obj['type']) + " " + self._(action)
         macrojob_storage = JobStorage(self.db.jobs, user)
         macrojob_id = macrojob_storage.create(obj=obj,
                                     op=action,
                                     computer=None,
                                     status='processing',
-                                    policy={'name':name,'name_es':name},
+                                    policy={'name':name,'name_es':name_es},
                                     administrator_username=user['username'])
         are_new_jobs = False
         for computer in computers:
@@ -926,7 +930,7 @@ class ChefTask(Task):
                 are_new_jobs = True
         job_status = 'processing' if job_ids_by_order else 'finished'
         self.db.jobs.update({'_id': macrojob_id},
-                            {'$set': {'status': job_status, 'nchilds': len(job_ids_by_order),'message': "This is a macrojob: %s childs" % len(job_ids_by_order)}})
+                            {'$set': {'status': job_status, 'nchilds': len(job_ids_by_order),'message': self._("This is a macrojob: %d childs") % len(job_ids_by_order)}})
         if are_new_jobs:
             invalidate_jobs(self.request, user)
 

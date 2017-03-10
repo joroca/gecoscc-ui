@@ -75,10 +75,12 @@ App.module("Job.Models", function (Models, App, Backbone, Marionette, $, _) {
             pagesize: function () { return this.perPage; },
             status:  function () { return this.status; },
             archived:  function () { return this.archived; },
-            parentId: function() { return this.parentId; }
+            parentId: function() { return this.parentId; },
+            total: function() { return this.total; }
         },
         parse: function (response) {
             this.totalPages = response.pages;
+            this.total = response.total;
             return response.jobs;
         }
     });

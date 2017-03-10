@@ -49,7 +49,7 @@ class JobResource(ResourcePaginatedReadOnly):
         if parentId:
             filters.append({'parent': ObjectId(parentId)})
         else:
-            filters.append({'parent': None})
+            filters.append({'parent': {'$exists': True, '$eq': None}})
             
         status = self.request.GET.get('status', '')
         if status:
