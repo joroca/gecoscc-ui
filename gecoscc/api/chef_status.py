@@ -20,7 +20,7 @@ from cornice.resource import resource
 
 from pyramid.threadlocal import get_current_registry
 
-from gecoscc.i18n import gettext as _
+
 from gecoscc.api import BaseAPI
 from gecoscc.models import Job
 from gecoscc.models import User
@@ -106,7 +106,7 @@ class ChefStatusResource(BaseAPI):
                 # Update parent 
                 self.collection.update({'_id': macrojob['_id']},
                                        {'$set': {'nchilds': macrojob['nchilds'],
-                                                 'message': _("This is a macrojob: %s childs") % macrojob['nchilds'],
+                                                 'message': self._("This is a macrojob: %d childs") % macrojob['nchilds'],
                                                  'status': 'finished' if macrojob['nchilds'] == 0 else macrojob['status']}})
                                                  
             self.request.db.nodes.update({'node_chef_id': node_id}, {'$set': {'error_last_chef_client': chef_client_error}})

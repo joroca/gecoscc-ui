@@ -54,7 +54,8 @@ class ChefTask(Task):
     def __init__(self):
         self.init_jobid()
         self.logger = self.get_logger()
-        gettext.bindtextdomain('gecoscc', '/opt/gecosccui-2.1.10/lib/python2.6/site-packages/gecoscc/locale/')
+        localedir = os.path.join(os.path.dirname(__file__), 'locale')
+        gettext.bindtextdomain('gecoscc', localedir)
         gettext.textdomain('gecoscc')
         self._ = gettext.gettext
         
