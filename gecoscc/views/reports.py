@@ -125,14 +125,18 @@ def reports(context, request):
     
     # Get current user data
     is_superuser = request.user.get('is_superuser', False) 
-    
+
     if not is_superuser:
-        # Get visibles ous
+        # Get visible ous
         ou_visibles = request.user.get('ou_managed', []) + request.user.get('ou_readonly', [])
         for ou_id in ou_visibles:
             ou = request.db.nodes.find_one({'type': 'ou', '_id': ObjectId(ou_id) })
             if ou is not None:
                 ous.append({'id': ou_id, 'name': ou['name']})
+    else:
+        ou_visibles = request.db.nodes.find({'type': 'ou'},{'_id':1,'name':1})
+        for ou in ou_visibles:
+            ous.append({'id': ou['_id'], 'name': ou['name']})
     
     return {'ou_managed': ous, 'is_superuser': is_superuser}    
 
